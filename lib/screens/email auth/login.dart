@@ -84,7 +84,7 @@ class LoginScreenState extends State<LoginScreen> {
                                   MaterialPageRoute(
                                       builder: (context) => Emailsignup()));
                             },
-                            child: AppText(text: 'Login'))
+                            child: AppText(text: 'SignUp'))
                       ],
                     ),
                     SizedBox(
