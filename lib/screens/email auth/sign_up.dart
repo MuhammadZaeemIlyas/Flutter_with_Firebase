@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_flutter/Firebase_auth/firebase_auth_services.dart';
@@ -15,7 +17,6 @@ class Emailsignup extends StatefulWidget {
 }
 
 bool _obscureText = true;
-bool verifypassword = false;
 
 class _EmailsignupState extends State<Emailsignup> {
   final FirebaseAuthService auth2 = FirebaseAuthService();
@@ -39,7 +40,11 @@ class _EmailsignupState extends State<Emailsignup> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: backbutton(backbtn: () {}, containercolor: AppColors.black100),
+        leading: backbutton(
+            backbtn: () {
+              Navigator.pop(context);
+            },
+            containercolor: AppColors.black100),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -116,10 +121,20 @@ class _EmailsignupState extends State<Emailsignup> {
                       child: AppButton(
                           onPressed: () async {
                             await checker();
-                            setState(() {
-                              signup();
-                              adduser();
-                            });
+                            await proceed();
+                            proceed() == true
+                                ? GlobalSnackBar.show(
+                                    context, 'Please fill all fields')
+                                : setState(() {
+                                    signup();
+                                    adduser();
+                                  });
+
+                            if (proceed()) {
+                              print('main true hun');
+                            } else {
+                              print('main false hun');
+                            }
                           },
                           btntext: 'Sign Up',
                           btntextsize: 18,
@@ -133,6 +148,28 @@ class _EmailsignupState extends State<Emailsignup> {
         ),
       ),
     );
+  }
+
+  bool proceed() {
+    String name = nameController.text.trim();
+    print('main name ka checker hon: $name');
+    String fathername = fathernameController.text.trim();
+
+    String age = ageController.text.trim();
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    String confirmpassword = confirmpassController.text.trim();
+
+    if (name == '' ||
+        fathername == '' ||
+        email == '' ||
+        age == '' ||
+        password == '' ||
+        confirmpassword == '') {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   bool checker() {
@@ -171,6 +208,13 @@ class _EmailsignupState extends State<Emailsignup> {
 
     if (user != null && checker() == true) {
       print('User is created');
+      GlobalSnackBar.show(context, 'User created Successfully');
+      nameController.clear();
+      fathernameController.clear();
+      emailController.clear();
+      ageController.clear();
+      passwordController.clear();
+      confirmpassController.clear();
     } else {
       print('There is error');
     }

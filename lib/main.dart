@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_flutter/firebase_options.dart';
+import 'package:firebase_flutter/screens/email%20auth/login.dart';
 import 'package:firebase_flutter/screens/email%20auth/sign_up.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Emailsignup(),
+      home: LoginScreen(),
     );
   }
 }

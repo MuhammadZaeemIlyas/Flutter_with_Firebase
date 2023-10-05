@@ -148,3 +148,54 @@ class _backbuttonState extends State<backbutton> {
     );
   }
 }
+
+class Messenger extends StatefulWidget {
+  final String Message;
+  const Messenger({super.key, required this.Message});
+
+  @override
+  State<Messenger> createState() => _MessengerState();
+}
+
+class _MessengerState extends State<Messenger> {
+  @override
+  Widget build(BuildContext context) {
+    return ScaffoldMessenger(
+        child: SnackBar(
+      content: AppText(text: widget.Message),
+      duration: Duration(seconds: 1),
+    ));
+  }
+}
+
+class GlobalSnackBar {
+  final String message;
+
+  const GlobalSnackBar({
+    required this.message,
+  });
+
+  static show(
+    BuildContext context,
+    String message,
+  ) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        elevation: 5,
+
+        content: AppText(text: message),
+        duration: new Duration(seconds: 1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.0), topRight: Radius.circular(16.0)),
+        ),
+        //backgroundColor: Colors.redAccent,
+        action: SnackBarAction(
+          textColor: Color(0xFFFAF2FB),
+          label: 'OK',
+          onPressed: () {},
+        ),
+      ),
+    );
+  }
+}
