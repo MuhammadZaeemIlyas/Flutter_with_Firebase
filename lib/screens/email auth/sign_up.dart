@@ -15,11 +15,14 @@ class Emailsignup extends StatefulWidget {
 }
 
 bool _obscureText = true;
+bool verifypassword = false;
 
 class _EmailsignupState extends State<Emailsignup> {
   final FirebaseAuthService auth2 = FirebaseAuthService();
-
+  TextEditingController nameController = TextEditingController();
+  TextEditingController fathernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmpassController = TextEditingController();
 
@@ -36,7 +39,7 @@ class _EmailsignupState extends State<Emailsignup> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: backbutton(backbtn: () {}),
+        leading: backbutton(backbtn: () {}, containercolor: AppColors.black100),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -61,11 +64,20 @@ class _EmailsignupState extends State<Emailsignup> {
                 child: Column(
                   children: [
                     Appfield(
-                      labelText: 'Your Email',
+                      controller: nameController,
+                      labelText: 'Enter Name',
+                    ),
+                    Appfield(
+                      controller: fathernameController,
+                      labelText: 'Enter Father Name',
                     ),
                     Appfield(
                       controller: emailController,
-                      labelText: 'Your Age',
+                      labelText: 'Enter Email',
+                    ),
+                    Appfield(
+                      controller: ageController,
+                      labelText: 'Enter Age',
                     ),
                     Appfield(
                       controller: passwordController,
@@ -82,6 +94,7 @@ class _EmailsignupState extends State<Emailsignup> {
                       obscureText: _obscureText,
                     ),
                     Appfield(
+                      controller: confirmpassController,
                       SuffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
@@ -101,8 +114,12 @@ class _EmailsignupState extends State<Emailsignup> {
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height * 0.08,
                       child: AppButton(
-                          onPressed: () {
-                            signup();
+                          onPressed: () async {
+                            await checker();
+                            setState(() {
+                              signup();
+                              adduser();
+                            });
                           },
                           btntext: 'Sign Up',
                           btntextsize: 18,
@@ -118,18 +135,55 @@ class _EmailsignupState extends State<Emailsignup> {
     );
   }
 
+  bool checker() {
+    String password = passwordController.text.trim();
+    String confirmpassword = confirmpassController.text.trim();
+
+    if (password == confirmpassword) {
+      print('password is verified');
+
+      print('hello $password');
+      print('confirm password $confirmpassword');
+      return true;
+    } else {
+      print('password is not same');
+
+      return false;
+    }
+  }
+
   void signup() async {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
+    String confirmpassword = confirmpassController.text.trim();
 
-    User? user = await auth2.signupwithEmailandPasssword(email, password);
-    print('hello $email');
-    print('hello $password');
+    User? user;
+    if (checker()) {
+      user = await auth2.signupwithEmailandPasssword(email, password);
+    }
 
-    if (user != null) {
+    print('Email: $email');
+    print('Password: $password');
+
+    setState(() {
+      print(checker());
+    });
+
+    if (user != null && checker() == true) {
       print('User is created');
     } else {
       print('There is error');
     }
+  }
+
+  void adduser() async {
+    String name = nameController.text.trim();
+    String fathername = fathernameController.text.trim();
+    double age = double.parse(ageController.text.trim());
+
+    await auth2.AddUserDetails(name, fathername, age);
+    print('name:$name');
+    print('father name:$fathername');
+    print('Age : $age');
   }
 }

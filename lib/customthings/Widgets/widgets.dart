@@ -123,8 +123,8 @@ class backbutton extends StatefulWidget {
   const backbutton(
       {super.key,
       required this.backbtn,
-      this.containercolor = Colors.white,
-      this.iconcolor = Colors.black});
+      this.containercolor = Colors.black,
+      this.iconcolor = Colors.white});
 
   @override
   State<backbutton> createState() => _backbuttonState();
@@ -137,7 +137,7 @@ class _backbuttonState extends State<backbutton> {
       padding: const EdgeInsets.all(5),
       child: CircleAvatar(
         radius: 3,
-        backgroundColor: AppColors.black10,
+        backgroundColor: widget.containercolor,
         child: IconButton(
             onPressed: widget.backbtn,
             icon: Icon(
